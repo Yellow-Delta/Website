@@ -1,4 +1,6 @@
 import sqlite3
+
+
 def delete_row(table, where: dict, db):
     conn = sqlite3.connect(f"databases/{db}")
     c = conn.cursor()

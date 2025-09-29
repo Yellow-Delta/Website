@@ -7,6 +7,20 @@
   <title>Yellow-Delta | Login</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-50 text-gray-800">
@@ -16,37 +30,47 @@
 
   <!-- Login Section -->
   <section id="login" class="min-h-screen flex items-center justify-center">
-    <div class="relative bg-white/50 backdrop-blur-lg rounded-3xl shadow-2xl p-10 w-full max-w-md">
-      
+    <div id="login-container"
+      class="relative bg-white/50 backdrop-blur-lg rounded-3xl shadow-2xl p-10 w-full max-w-md">
+
+      <!-- Flashed Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div id="flash-message"
+            class="mb-4 px-4 py-3 rounded-lg text-white shadow-lg {% if messages[0][0] == 'error' %}bg-red-500{% elif messages[0][0] == 'success' %}bg-green-500{% else %}bg-yellow-500{% endif %}">
+            {{ messages[0][1] }}
+          </div>
+        {% endif %}
+      {% endwith %}
+
       <h2 id="login-title" class="text-4xl font-extrabold text-yellow-700 text-center mb-6">
         Login to Yellow-Delta
       </h2>
-      
-      <form class="space-y-6" action="/login" method="POST">
-        
+
+      <form id="login-form" class="space-y-6" action="/login" method="POST">
+
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
           <input type="email" name="email" id="email" required
             class="mt-2 w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
         </div>
-        
+
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <input type="password" name="password" id="password" required
             class="mt-2 w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
         </div>
-        
-        
+
         <button type="submit"
           class="w-full bg-yellow-500 text-white py-2 rounded-lg font-bold hover:bg-yellow-600 transition-all">
           Login
         </button>
-        
+
       </form>
 
       <p class="mt-6 text-center text-sm text-gray-700">
         Don’t have an account?
-        Well we don't care its only for members of the house
+        Well we don't care, it's only for members of the house.
       </p>
     </div>
   </section>
@@ -59,19 +83,30 @@
   <!-- Anime.js -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      anime.timeline({ easing: "easeOutExpo", duration: 800 })
-        .add({
-          targets: "#login-title",
-          opacity: [0, 1],
-          translateY: [50, 0],
-          delay: 200
-        })
-        .add({
-          targets: "form",
-          opacity: [0, 1],
-          translateY: [30, 0],
-          delay: 100
-        });
+      const flashMessage = document.getElementById("flash-message");
+      const loginContainer = document.getElementById("login-container");
+      const loginTitle = document.getElementById("login-title");
+      const loginForm = document.getElementById("login-form");
+
+      if (flashMessage) {
+        // If there's a flash message, shake the login container
+        loginContainer.classList.add("shake");
+      } else {
+        // No flash message: normal fade-in animation
+        anime.timeline({ easing: "easeOutExpo", duration: 800 })
+          .add({
+            targets: "#login-title",
+            opacity: [0, 1],
+            translateY: [50, 0],
+            delay: 200
+          })
+          .add({
+            targets: "#login-form",
+            opacity: [0, 1],
+            translateY: [30, 0],
+            delay: 100
+          });
+      }
     });
   </script>
 

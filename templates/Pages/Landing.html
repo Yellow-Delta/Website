@@ -7,12 +7,45 @@
   <title>Yellow-Delta | Coding Commons</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out forwards;
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-50 text-gray-800">
 
   <!-- Navbar -->
-  {%include "Components/NavBar.html"%}
+  {% include "Components/NavBar.html" %}
+
+  <!-- Flashed Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="fixed top-5 right-5 z-50 space-y-2">
+      {% for category, message in messages %}
+        <div class="px-6 py-4 my-[40px] rounded-lg shadow-lg text-white
+          {% if category == 'success' %}bg-green-500
+          {% elif category == 'error' %}bg-red-500
+          {% elif category == 'warning' %}bg-yellow-500
+          {% else %}bg-gray-500{% endif %} animate-fade-in">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
   <!-- Hero Section -->
   <section id="hero" class="relative h-screen flex items-center justify-center text-center">
@@ -22,16 +55,19 @@
         Welcome to Yellow-Delta
       </h2>
       <p id="hero-desc" class="mt-6 text-lg max-w-2xl mx-auto text-gray-700">
-        A home in <span class="font-bold text-yellow-700">The Coding Commons</span>, where innovation meets
-        collaboration.
+        A home in <span class="font-bold text-yellow-700">The Coding Commons</span>, where innovation meets collaboration.
       </p>
       <div class="mt-10 space-x-4">
-        <a href="#" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-xl">
+        <a href="https://codingcommons.xyz" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-xl ">
           Coding Commons Website
         </a>
-        <a href="https://discord.gg/8eSnNCDQN2"
+        <a href="/projects"
           class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-xl">
           Our Projects
+        </a>
+        <a href="/projects"
+          class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg shadow-xl">
+          Our github
         </a>
       </div>
     </div>
@@ -122,7 +158,6 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       anime.timeline({ easing: "easeOutExpo", duration: 1000 })
-        // Hero & About Animation
         .add({
           targets: "#hero-title",
           opacity: [0, 1],
@@ -147,7 +182,6 @@
           translateY: [30, 0],
           delay: 200
         })
-        // Member Cards Animation
         .add({
           targets: "#members-title",
           opacity: [0, 1],
@@ -161,9 +195,6 @@
           scale: [0.8, 1],
           delay: anime.stagger(200)
         })
-        // Members Title Animation
-
-
         .add({
           targets: "#vision-title",
           opacity: [0, 1],
@@ -178,7 +209,6 @@
           delay: 600,
           duration: 600
         });
-
     });
   </script>
 </body>
